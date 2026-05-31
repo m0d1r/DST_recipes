@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DST Рецепты</title>
-    <link rel="stylesheet" href="js/ui/styles.css">
+    <title>DST Блюда</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="app">
     <div id="welcome-screen" class="screen">
         <form id="welcome-form" class="welcome-box">
-            <h2>Кулинарная книга Константы</h2>
+            <h2>Список блюд Константы</h2>
             <p>Введите ваше имя для доступа к записям:</p>
             <input type="text" id="username-input" required placeholder="Имя выжившего..." autocomplete="off">
             <button type="submit">Исследовать</button>
@@ -19,10 +19,10 @@
 
     <div id="main-screen" class="screen hidden">
         <header class="app-header">
-            <h1>Рецепты Качелей Портала</h1>
+            <h1>Блюда Константы</h1>
             <div class="user-profile">
                 <span id="user-greeting">Выживший: Гость</span>
-                <button id="logout-btn" class="btn-sm">Покинуть лагерь</button>
+                <button id="logout-btn" class="btn-sm">Сменить имя</button>
             </div>
         </header>
 
@@ -56,7 +56,6 @@
                     <button class="tab-btn" data-category="health">Здоровье</button>
                     <button class="tab-btn" data-category="hunger">Голод</button>
                     <button class="tab-btn" data-category="sanity">Рассудок</button>
-                    <button class="tab-btn" data-category="special">Особое</button>
                 </div>
             </section>
 
@@ -71,14 +70,6 @@
                 </main>
             </div>
         </div>
-    </div>
-</div>
-
-<div id="ingredient-modal" class="modal hidden">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <h3 id="modal-title">Группа ингредиентов</h3>
-        <p id="modal-body"></p>
     </div>
 </div>
 

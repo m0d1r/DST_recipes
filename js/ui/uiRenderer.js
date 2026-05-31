@@ -6,11 +6,11 @@ export function initUI({
     onGetStatistics
 }) {
     let allRecipes = [];
-
     let currentCategory = 'all';
     let currentSearchQuery = '';
     let currentSortField = 'name';
     let currentSortOrder = 'asc';
+    let currentUsername = '';
 
     const welcomeScreen = document.getElementById('welcome-screen');
     const mainScreen = document.getElementById('main-screen');
@@ -27,37 +27,14 @@ export function initUI({
     const recipesGrid = document.getElementById('recipes-grid');
     const statsContent = document.getElementById('stats-content');
 
-    const modal = document.getElementById('ingredient-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-    const modalClose = document.querySelector('.modal-close');
-
-    const ingredientDetails = {
-        fruit: "Драконий фрукт, Банан, Гранат, Дуриан, Арбуз, Ягоды",
-        meat: "Мясо, Кусочек мяса, Монстромясо, Мясо птицы, Лягушачьи лапки",
-        veggie: "Тыква, Морковь, Кукуруза, Баклажан, Грибы, Лишайник",
-        filler: "Лёд, Ветки, Ягоды, Поганки, Крылья бабочки",
-        sweetener: "Мёд, Пчелиные соты",
-        honey: "Мёд",
-        ice: "Лёд",
-        twig: "Ветка"
-    };
-
-    function checkAuth() {
-        const savedName = localStorage.getItem('username');
-        if (savedName) {
-            showMainScreen(savedName);
-        } else {
-            showWelcomeScreen();
-        }
-    }
-
     function showWelcomeScreen() {
         welcomeScreen.classList.remove('hidden');
         mainScreen.classList.add('hidden');
+        usernameInput.value = '';
     }
 
     function showMainScreen(username) {
+        currentUsername = username;
         welcomeScreen.classList.add('hidden');
         mainScreen.classList.remove('hidden');
         userGreeting.textContent = `Выживший: ${username}`;
@@ -65,80 +42,62 @@ export function initUI({
     }
 
     async function loadData() {
-        recipesGrid.innerHTML = '<p>Расшифровка старинных рецептов...</p>';
+        recipesGrid.innerHTML = '<p>Загрузка блюд из котла...</p>';
         try {
             allRecipes = await onLoadRecipes();
-            renderApp();
+            if (allRecipes.length === 0) {
+                recipesGrid.innerHTML = '<p>Не удалось загрузить блюда. Попробуйте позже.</p>';
+            } else {
+                renderApp();
+            }
         } catch (error) {
             recipesGrid.innerHTML = `<p style="color: #aa2222;">Ошибка исследования: ${error.message || error}</p>`;
         }
     }
 
     function renderApp() {
-        let processedRecipes = [...allRecipes];
-
-        processedRecipes = onFilterChange(processedRecipes, currentCategory);
-        processedRecipes = onSearch(processedRecipes, currentSearchQuery);
-        processedRecipes = onSortChange(processedRecipes, currentSortField, currentSortOrder);
-
-        renderGrid(processedRecipes);
-        renderStats(processedRecipes);
+        let processed = [...allRecipes];
+        processed = onFilterChange(processed, currentCategory);
+        processed = onSearch(processed, currentSearchQuery);
+        processed = onSortChange(processed, currentSortField, currentSortOrder);
+        renderGrid(processed);
+        renderStats(processed);
     }
 
     function renderGrid(recipes) {
         recipesGrid.innerHTML = '';
         if (recipes.length === 0) {
-            recipesGrid.innerHTML = '<p>Рецепты не найдены в этой глуши...</p>';
+            recipesGrid.innerHTML = '<p>Блюда не найдены в этой глуши...</p>';
             return;
         }
-
-        recipes.forEach(recipe => {
+        for (const recipe of recipes) {
             const card = document.createElement('div');
             card.className = 'recipe-card';
-
-            const ingredientsHTML = recipe.ingredients.map(ing => {
-                return `<span class="ingredient-tag" data-type="${ing.type}">${ing.amount}x ${ing.type}</span>`;
-            }).join(' ');
-
-            const imagePath = `js/ui/images/${recipe.id}.png`;
-
             card.innerHTML = `
-                <div>
-                    <h4>${recipe.name}</h4>
-                    <div class="recipe-image-container">
-                        <img src="${imagePath}" alt="${recipe.name}" class="recipe-image" onerror="this.parentNode.style.display='none'">
+                <h4>${recipe.name}</h4>
+                <div class="recipe-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Здоровье:</span>
+                        <span class="stat-val health">${recipe.health}</span>
                     </div>
-                    <div class="recipe-stats">
-                        <div class="stat-row">
-                            <span class="stat-label">Здоровье:</span>
-                            <span class="stat-val health">${recipe.health}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Голод:</span>
-                            <span class="stat-val hunger">${recipe.hunger}</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-label">Рассудок:</span>
-                            <span class="stat-val sanity">${recipe.sanity}</span>
-                        </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Голод:</span>
+                        <span class="stat-val hunger">${recipe.hunger}</span>
                     </div>
-                    <div class="recipe-ingredients">
-                        <h5>Компоненты:</h5>
-                        ${ingredientsHTML}
+                    <div class="stat-row">
+                        <span class="stat-label">Рассудок:</span>
+                        <span class="stat-val sanity">${recipe.sanity}</span>
                     </div>
                 </div>
-                ${recipe.specialEffect ? `<div class="special-effect">Эффект: ${recipe.specialEffect}</div>` : ''}
             `;
-
             recipesGrid.appendChild(card);
-        });
+        }
     }
 
     function renderStats(recipes) {
         const stats = onGetStatistics(recipes);
-
         statsContent.innerHTML = `
-            <div class="stat-item"><span>Всего рецептов:</span> <strong>${stats.totalRecipes}</strong></div>
+            <div class="stat-item"><span>Всего блюд:</span> <strong>${stats.totalRecipes}</strong></div>
             <div class="stat-item"><span>Ср. здоровье:</span> <strong>${stats.avgHealth}</strong></div>
             <div class="stat-item"><span>Ср. голод:</span> <strong>${stats.avgHunger}</strong></div>
             <div class="stat-item"><span>Ср. рассудок:</span> <strong>${stats.avgSanity}</strong></div>
@@ -146,7 +105,6 @@ export function initUI({
             <div class="stat-item"><span>Здоровье:</span> <span>${stats.categoriesCount.health || 0}</span></div>
             <div class="stat-item"><span>Голод:</span> <span>${stats.categoriesCount.hunger || 0}</span></div>
             <div class="stat-item"><span>Рассудок:</span> <span>${stats.categoriesCount.sanity || 0}</span></div>
-            <div class="stat-item"><span>Особое:</span> <span>${stats.categoriesCount.special || 0}</span></div>
         `;
     }
 
@@ -154,14 +112,11 @@ export function initUI({
         e.preventDefault();
         const name = usernameInput.value.trim();
         if (name) {
-            localStorage.setItem('username', name);
             showMainScreen(name);
         }
     });
 
     logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('username');
-        usernameInput.value = '';
         showWelcomeScreen();
     });
 
@@ -184,27 +139,10 @@ export function initUI({
         if (e.target.classList.contains('tab-btn')) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             e.target.classList.add('active');
-
             currentCategory = e.target.dataset.category;
             renderApp();
         }
     });
 
-    recipesGrid.addEventListener('click', (e) => {
-        if (e.target.classList.contains('ingredient-tag')) {
-            const type = e.target.dataset.type;
-            const items = ingredientDetails[type] || "Примеры неизвестны науке";
-
-            modalTitle.textContent = `Группа: ${type}`;
-            modalBody.innerHTML = `<strong>Подходящие элементы:</strong><br>${items}`;
-            modal.classList.remove('hidden');
-        }
-    });
-
-    modalClose.addEventListener('click', () => modal.classList.add('hidden'));
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.add('hidden');
-    });
-
-    checkAuth();
+    showWelcomeScreen();
 }

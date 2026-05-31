@@ -4,7 +4,7 @@ import { initUI } from './ui/uiRenderer.js';
 async function loadRecipes() {
     try {
         const data = await fetchAllRecipes();
-        console.log(`Loaded ${data.length} recipes`);
+        console.log(`Loaded ${data.length} recipes from wiki`);
         return data;
     } catch (err) {
         console.error("Load error:", err);
