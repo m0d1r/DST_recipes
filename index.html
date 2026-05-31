@@ -4,12 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DST Рецепты</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="js/ui/styles.css">
 </head>
 <body>
-    <div id="app">
-        <p>Загрузка...</p>
+<div id="app">
+    <div id="welcome-screen" class="screen">
+        <form id="welcome-form" class="welcome-box">
+            <h2>Кулинарная книга Константы</h2>
+            <p>Введите ваше имя для доступа к записям:</p>
+            <input type="text" id="username-input" required placeholder="Имя выжившего..." autocomplete="off">
+            <button type="submit">Исследовать</button>
+        </form>
     </div>
-    <script type="module" src="js/main.js"></script>
+
+    <div id="main-screen" class="screen hidden">
+        <header class="app-header">
+            <h1>Рецепты Качелей Портала</h1>
+            <div class="user-profile">
+                <span id="user-greeting">Выживший: Гость</span>
+                <button id="logout-btn" class="btn-sm">Покинуть лагерь</button>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <section class="controls-section">
+                <div class="search-sort-box">
+                    <div class="control-group">
+                        <label for="search-input">Поиск по названию:</label>
+                        <input type="text" id="search-input" placeholder="Поиск блюда...">
+                    </div>
+                    <div class="control-group">
+                        <label for="sort-field">Сортировать по:</label>
+                        <select id="sort-field">
+                            <option value="name">Названию</option>
+                            <option value="health">Здоровью</option>
+                            <option value="hunger">Голоду</option>
+                            <option value="sanity">Рассудку</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="sort-order">Порядок:</label>
+                        <select id="sort-order">
+                            <option value="asc">Возрастание</option>
+                            <option value="desc">Убывание</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tabs-container" id="tabs-container">
+                    <button class="tab-btn active" data-category="all">Все блюда</button>
+                    <button class="tab-btn" data-category="health">Здоровье</button>
+                    <button class="tab-btn" data-category="hunger">Голод</button>
+                    <button class="tab-btn" data-category="sanity">Рассудок</button>
+                    <button class="tab-btn" data-category="special">Особое</button>
+                </div>
+            </section>
+
+            <div class="content-layout">
+                <aside class="stats-sidebar">
+                    <h3>Статистика меню</h3>
+                    <div id="stats-content"></div>
+                </aside>
+
+                <main class="recipes-main">
+                    <div id="recipes-grid" class="recipes-grid"></div>
+                </main>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ingredient-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <h3 id="modal-title">Группа ингредиентов</h3>
+        <p id="modal-body"></p>
+    </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
