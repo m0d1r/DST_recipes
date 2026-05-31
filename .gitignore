@@ -1,0 +1,12 @@
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+node_modules/
+dist/
+build/
+*.tmp
+*.swp
+*.swo
