@@ -37,7 +37,7 @@ export function initUI({
         currentUsername = username;
         welcomeScreen.classList.add('hidden');
         mainScreen.classList.remove('hidden');
-        userGreeting.textContent = `Выживший: ${username}`;
+        userGreeting.textContent = `Привет, ${username}!`;
         loadData();
     }
 
