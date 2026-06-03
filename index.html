@@ -8,15 +8,17 @@
 </head>
 <body>
 <div id="app">
+    <!-- Экран приветствия -->
     <div id="welcome-screen" class="screen">
         <form id="welcome-form" class="welcome-box">
-            <h2>Список блюд Константы</h2>
+            <h2>Кулинарная книга Константы</h2>
             <p>Введите ваше имя для доступа к записям:</p>
             <input type="text" id="username-input" required placeholder="Имя выжившего..." autocomplete="off">
             <button type="submit">Исследовать</button>
         </form>
     </div>
 
+    <!-- Главный экран (изначально скрыт) -->
     <div id="main-screen" class="screen hidden">
         <header class="app-header">
             <h1>Блюда Константы</h1>
@@ -27,6 +29,7 @@
         </header>
 
         <div class="main-layout">
+            <!-- Панель управления: поиск, сортировка, вкладки -->
             <section class="controls-section">
                 <div class="search-sort-box">
                     <div class="control-group">
@@ -51,6 +54,7 @@
                     </div>
                 </div>
 
+                <!-- Вкладки фильтрации по категориям -->
                 <div class="tabs-container" id="tabs-container">
                     <button class="tab-btn active" data-category="all">Все блюда</button>
                     <button class="tab-btn" data-category="health">Здоровье</button>
@@ -60,11 +64,13 @@
             </section>
 
             <div class="content-layout">
+                <!-- Блок статистики -->
                 <aside class="stats-sidebar">
                     <h3>Статистика меню</h3>
                     <div id="stats-content"></div>
                 </aside>
 
+                <!-- Сетка карточек блюд -->
                 <main class="recipes-main">
                     <div id="recipes-grid" class="recipes-grid"></div>
                 </main>

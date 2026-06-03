@@ -1,3 +1,4 @@
+// Инициализация UI: получает колбэки для работы с данными
 export function initUI({
     onLoadRecipes,
     onFilterChange,
@@ -12,6 +13,7 @@ export function initUI({
     let currentSortOrder = 'asc';
     let currentUsername = '';
 
+    // DOM-элементы
     const welcomeScreen = document.getElementById('welcome-screen');
     const mainScreen = document.getElementById('main-screen');
     const welcomeForm = document.getElementById('welcome-form');
@@ -27,12 +29,14 @@ export function initUI({
     const recipesGrid = document.getElementById('recipes-grid');
     const statsContent = document.getElementById('stats-content');
 
+    // Показать экран приветствия (очистить поле)
     function showWelcomeScreen() {
         welcomeScreen.classList.remove('hidden');
         mainScreen.classList.add('hidden');
         usernameInput.value = '';
     }
 
+    // Показать главный экран, установить приветствие, загрузить данные
     function showMainScreen(username) {
         currentUsername = username;
         welcomeScreen.classList.add('hidden');
@@ -41,6 +45,7 @@ export function initUI({
         loadData();
     }
 
+    // Загрузка данных через колбэк
     async function loadData() {
         recipesGrid.innerHTML = '<p>Загрузка блюд из котла...</p>';
         try {
@@ -55,6 +60,7 @@ export function initUI({
         }
     }
 
+    // Полный рендер (применяет фильтр, поиск, сортировку)
     function renderApp() {
         let processed = [...allRecipes];
         processed = onFilterChange(processed, currentCategory);
@@ -64,6 +70,7 @@ export function initUI({
         renderStats(processed);
     }
 
+    // Отрисовка карточек блюд
     function renderGrid(recipes) {
         recipesGrid.innerHTML = '';
         if (recipes.length === 0) {
@@ -94,6 +101,7 @@ export function initUI({
         }
     }
 
+    // Отрисовка статистики
     function renderStats(recipes) {
         const stats = onGetStatistics(recipes);
         statsContent.innerHTML = `
@@ -108,6 +116,7 @@ export function initUI({
         `;
     }
 
+    // Обработчики событий
     welcomeForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = usernameInput.value.trim();
@@ -144,5 +153,6 @@ export function initUI({
         }
     });
 
+    // Запуск: показать экран приветствия
     showWelcomeScreen();
 }

@@ -1,6 +1,8 @@
+// Импорт функций из слоя данных и UI
 import { fetchAllRecipes, sortRecipes, filterByCategory, searchByName, getStatistics } from './data/recipesApi.js';
 import { initUI } from './ui/uiRenderer.js';
 
+// Функция загрузки данных (вызывается UI)
 async function loadRecipes() {
     try {
         const data = await fetchAllRecipes();
@@ -12,6 +14,7 @@ async function loadRecipes() {
     }
 }
 
+// Инициализация UI с передачей колбэков для работы с данными
 initUI({
     onLoadRecipes: loadRecipes,
     onFilterChange: (recipes, category) => filterByCategory(recipes, category),
