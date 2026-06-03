@@ -50,14 +50,23 @@ HTML5, CSS3, JavaScript (ES6+), ES6 модули, Fetch API, DOMParser.
 ## Состав репозитория
 
 DST_recipes/
-├── index.html
-├── styles.css
-├── README.md
-└── js/
-    ├── main.js
-    ├── data/
-    │   └── recipesApi.js
+
+index.html
+
+styles.css
+
+README.md
+
+js/
+
+└── main.js
+    
+    └── data/
+
+        └── recipesApi.js
+
     └── ui/
+
         └── uiRenderer.js
 
 ## Авторы
